@@ -8,12 +8,14 @@ app.config [ "SQLALCHEMY_DATABASE_URI" ] = 'sqlite:///MediSync.db'
 
 # Loading secrets from .env:
 load_dotenv ( )
+# Stores Admin credentials:
 admin_email = os.getenv ( "ADMIN_EMAIL_ID" )
 admin_password = os.getenv ( "ADMIN_PASS" )
 
 # Binding the database to the app:
 db.init_app ( app )
 
+# Creating the tables within the database:
 with app.app_context ( ):
 	db.create_all ( )
 
@@ -22,7 +24,7 @@ def index ( ):
 	return render_template ( "index.html" )
 
 @app.route ( "/register/patient", methods = [ "GET", "POST" ] )
-def patient_registeration ( ):
+def patient_registeration ( ): # Patient Registeration form
 	message = ""
 	if request.method == "POST":
 		name = request.form.get ( "name" )
@@ -45,7 +47,7 @@ def patient_registeration ( ):
 	return render_template ( "patient_registeration.html" )
 
 @app.route ( "/doctor_registeration", methods = [ "GET", "POST" ] )
-def doctor_registeration ( ):
+def doctor_registeration ( ): # Doctor Registeration form
 	message = ""
 	if request.method == "POST":
 		name = request.form.get ( "name" )
@@ -66,7 +68,7 @@ def doctor_registeration ( ):
 	return render_template ( "doctor_registeration.html" )
 
 @app.route ( "/login", methods = [ "GET", "POST" ] )
-def login ( ):
+def login ( ): # Common login form for all the 3 users
 	message = request.args.get ( "message", "" )
 	if request.method == "POST":
 		role = request.form.get ( 'role' )
@@ -98,21 +100,22 @@ def login ( ):
 	return render_template ( "login.html", message = message )
 
 @app.route ( "/patient/dashboard/<int:patient_id>", methods = [ "GET", "POST" ] )
-def patient_dashboard ( patient_id ):
+def patient_dashboard ( patient_id ): # After login, patient is redirected to this route
 	patient = Patient.query.get ( patient_id )
 	return render_template ( "patient_dashboard.html", patient = patient)
 
 @app.route ( "/doctor/dashboard/<int:doctor_id>", methods = [ "GET", "POST" ] )
-def doctor_dashboard ( doctor_id ):
+def doctor_dashboard ( doctor_id ): # For doctors, this will redirect to their dashboard
 	doctor = Doctor.query.get ( doctor_id )
 	return render_template ( "doctor_dashboard.html", doctor = doctor )
 
 @app.route ( "/admin/dashboard", methods = [ "GET", "POST" ] )
-def admin_dashboard ( ):
+def admin_dashboard ( ): # Login page will redirect here if the correct admin credentials are entered
 	return render_template ( "admin_dashboard.html" )
 
 @app.route ( "/error" )
-def error ( ):
+def error ( ): # To handle any missed conditions
 	return render_template ( "error.html" )
+
 if __name__ == "__main__":
 	app.run ( debug = True )
