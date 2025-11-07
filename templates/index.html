@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+{% block main%}
+<h1>Welcome to MediSync</h1>
+<p>Info about MediSync</p>
+<h2>Want to book an appointment? Visiting us for the first time?</h2>
+<p>Kindly register and start using our services right away!</p>
+<a href="{{url_for ( 'patient_registeration' )}}">Register / Sign up</a>
+<br>
+{%endblock %}

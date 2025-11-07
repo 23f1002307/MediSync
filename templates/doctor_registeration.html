@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}Doctor Registeration{% endblock %}
+{% block main %}
+<h1>Registeration for Doctors</h1>
+<form action="{{url_for ( 'doctor_registeration' )}}" method="POST">
+<label for="name">Full Name: *</label>
+<br>
+<input type="text" name="name" id="name" required>
+<br>
+<label for="phone">Phone number: *</label>
+<br>
+<input type="text" name="phone" id="phone" required>
+<br>
+<label for="email">Email ID: *</label>
+<br>
+<input type="email" name="email" id="email" required>
+<br>
+<label for="password">Password: *</label>
+<br>
+<input type="password" name="password" id="password" required>
+<br>
+<label for="specialization">Specialization: *</label>
+<br>
+<select name="specialization" id="specialization" required>
+    <option value="" disabled selected>-- Choose a Specialty --</option>
+    <option value="Family Medicine/General Practitioner">Family Medicine/General Practitioner</option>
+    <option value="Internal Medicine">Internal Medicine</option>
+    <option value="Cardiology">Cardiology</option>
+    <option value="Dermatology">Dermatology</option>
+    <option value="Pediatrics">Pediatrics</option>
+    <option value="Obstetrics & Gynecology (OB/GYN)">Obstetrics & Gynecology (OB/GYN)</option>
+    <option value="Orthopedic Surgery">Orthopedic Surgery</option>
+    <option value="Gastroenterology">Gastroenterology</option>
+    <option value="Ophthalmology">Ophthalmology</option>
+    <option value="Psychiatry">Psychiatry</option>
+    <option value="Otolaryngology (ENT)">Otolaryngology (ENT)</option>
+    <option value="Endocrinology">Endocrinology</option>
+    <option value="Urology">Urology</option>
+    <option value="Oncology">Oncology</option>
+    <option value="Emergency Medicine">Emergency Medicine</option>
+</select>
+<br>
+<label for="qualification">Qualification:</label>
+<br>
+<input type="text" name="qualification" id="qualification">
+<br>
+<label for="experience_years">Experience ( in years ):</label>
+<br>
+<input type="number" name="experience_years" id="experience_years">
+<br>
+<button type="submit">Register</button>
+<button type="reset">Clear form</button>
+</form>
+{% endblock %}

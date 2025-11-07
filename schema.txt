@@ -1,0 +1,77 @@
+Patient:
+ID
+Full name - edit ( text )
+Phone number - edit ( tel )
+Email ID - edit ( email )
+Password - edit ( password )
+Gender - radio
+Age - edit ( tel )
+Blood group - edit ( radio )
+Address - edit ( text area )
+Medical history - edit ( text area )
+Note: A patient can search for any doctor by their specialization or name.
+They can book appointment that is appointment is created by the patient.
+Fields he will enter:
+Doctor specialization / Doctor name
+Date
+Time
+Book / Update / Cancel
+( Grant access to appointments model )
+
+Doctor:
+ID
+Full Name - edit ( text )
+Phone number - edit ( tel )
+Email ID - edit ( email )
+password - edit ( password )
+Specialization - combo box
+qualification - edit ( text )
+experience in years - edit ( tel )
+Note: A doctor can have a single specialization
+It can view all available appointments booked under his ID ( access to appointments )
+
+# Availability:
+Availability in days - check boxes
+available from - drop down ( number )
+available to - drop down ( number )
+
+Appointments:
+ID
+Patient ID
+Doctor ID
+date
+time
+
+Treatment:
+id
+appointment id
+diagnosis
+prescription
+notes
+Note: Patient can see only his treatment having his id
+That is under appointments
+A doctor can view all patient's history ( patient's profile ( not personal info ) / treatment ) that have booked an appointment with him.
+
+# Relations:
+Doctor -> Appointment -> Patient
+Doctor -> Appointment -> Treatment
+Can view patient's profile like age, gender, medical history, blood group, etc.
+
+Patient -> search -> doctor 
+View doctor's profile - specialization, experience ( in years ), qualification
+Patient -> Book appointment
+Enter doctor name or specialization
+
+# Final:
+Doctor -> Availability ( one to many )
+A doctor can have many availabilities on various days.
+Each availability belongs to a single doctor.
+
+Doctor -> Appointment and Patient -> Appointment ( one to many )
+A doctor and patient can have multiple appointments.
+But each appointment can have a doctor and a patient.
+
+Appointment -> Treatment ( one to one )
+Each appointment can have one treatment
+Each treatment belongs to a single appointment
+

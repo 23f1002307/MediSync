@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block title %}Admin Dashboard{% endblock %}
+{% block main %}
+<h1>See all the appointments & profiles for doctors and patients.</h1>
+<h2>Register a Doctor</h2>
+<a href="{{url_for ( 'doctor_registeration' )}}">Register Doctor</a>
+<br>
+{% endblock %}

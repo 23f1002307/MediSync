@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block title %}Register yourself{% endblock %}
+{% block main %}
+<form action="{{url_for ( 'patient_registeration' )}}" method="POST">
+	<label for="name">Full Name: *</label>
+<br>
+<input type="text" name="name" id="name" required>
+<br>
+<label for="phone">Phone number: *</label>
+<br>
+<input type="text" name="phone" id="phone" required>
+<br>
+<label for="email">Email ID: *</label>
+<br>
+<input type="email" name="email" id="email" required>
+<br>
+<label for="password">Create a strong password: *</label>
+<br>
+<input type="password" name="password" id="password" required>
+<br>
+<label for="age">Age: *</age>
+<br>
+<input type="tel" name="age" id="age" required>
+<br>
+<fieldset>
+<legend>Gender: *</legend>
+<br>
+<input type="radio" name="gender" value="m" id="m">
+<label for="m">Male</label>
+<br>
+<input type="radio" name="gender" value="f" id="f">
+<label for="f">Female</label>
+<br>
+<input type="radio" name="gender" value="o" id="o">
+<label for="o">Other</label>
+<br>
+</fieldset>
+<label for="address">Address: * (Enter your complete address )</label>
+<br>
+<input type="text" name="address" id="address" required>
+</br>
+<fieldset>
+<legend>Choose your Blood group: *</legend>
+<br>
+<input type="radio" name="blood_group" value="A+" id="A+">
+<label for="A+">A+</label>
+<br>
+<input type="radio" name="blood_group" value="A-" id="A-">
+<label for="A-">A-</label>
+<br>
+<input type="radio" name="blood_group" value="B+" id="B+">
+<label for="B+">B+</label>
+<br>
+<input type="radio" name="blood_group" value="B-" id="B-">
+<label for="B-">B-</label>
+<br>
+<input type="radio" name="blood_group" value="AB+" id="AB+">
+<label for="AB+">AB+</label>
+<br>
+<input type="radio" name="blood_group" value="AB-" id="AB-">
+<label for="AB-">AB-</label>
+<br>
+<input type="radio" name="blood_group" value="O+" id="O+">
+<label for="O+">O+</label>
+<br>
+<input type="radio" name="blood_group" value="O-" id="O-">
+<label for="O-">O-</label>
+</fieldset>
+</br>
+<label for="medical_history">Tell us about your medical history ( any specific or repititive problems ): *</label>
+<br>
+<textarea name="medical_history" id="medical_history"></textarea>
+<br>
+<button type="submit">Submit</button>
+<button type="reset">Clear form</button>
+<br>
+</form>
+{% endblock %}
