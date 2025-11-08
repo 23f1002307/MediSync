@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block title %}Update Doctor Profile{% endblock %}
+{% block main %}
+<h1>Dr. {{doctor.name}}'s Profile</h1>
+<form action="{{url_for ( 'update_doctor', doctor_id = doctor.id )}}" method="POST">
+<label for="name">Full Name: *</label>
+<br>
+<input type="text" name="name" value="{{doctor.name}}" id="name" required>
+<br>
+<label for="phone">Phone number: *</label>
+<br>
+<input type="text" name="phone" value="{{doctor.phone}}" id="phone" required>
+<br>
+<label for="email">Email ID: *</label>
+<br>
+<input type="email" name="email" value="{{doctor.email}}" id="email" required>
+<br>
+<label for="password">Password: *</label>
+<br>
+<input type="password" name="password" value="{{doctor.password}}" id="password" required>
+<br>
+<!--Creating a list of all the specializations to loop over-->
+{% set specializations = [
+  "Family Medicine/General Practitioner",
+  "Internal Medicine",
+  "Cardiology",
+  "Dermatology",
+  "Pediatrics",
+  "Obstetrics & Gynecology (OB/GYN)",
+  "Orthopedic Surgery",
+  "Gastroenterology",
+  "Ophthalmology",
+  "Psychiatry",
+  "Otolaryngology (ENT)",
+  "Endocrinology",
+  "Urology",
+  "Oncology",
+  "Emergency Medicine"
+] %}
+<label for="specialization">Specialization: *</label>
+<br>
+<select name="specialization" id="specialization" required>
+    <option value="" disabled selected>-- Choose a Specialty --</option>
+{% for specialization in specializations %}
+<option value="{{specialization}}" {% if specialization == doctor.specialization %}selected{% endif %}>
+{{specialization}}
+</option>
+{% endfor %}
+</select>
+<br>
+<label for="qualification">Qualification:</label>
+<br>
+<input type="text" name="qualification" value="{{doctor.qualification}}" id="qualification">
+<br>
+<label for="experience_years">Experience ( in years ):</label>
+<br>
+<input type="number" name="experience_years" value="{{doctor.experience_years}}" id="experience_years">
+<br>
+<button type="submit">Update Details</button>
+<button type="reset">Don't Update</button>
+</form>
+{% endblock %}

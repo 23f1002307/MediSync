@@ -1,8 +1,145 @@
 {% extends "base.html" %}
 {% block title %}Admin Dashboard{% endblock %}
 {% block main %}
-<h1>See all the appointments & profiles for doctors and patients.</h1>
-<h2>Register a Doctor</h2>
-<a href="{{url_for ( 'doctor_registeration' )}}">Register Doctor</a>
+<h1>Welcome to the Admin Dashboard.</h1>
+<h2>Doctor Details</h2>
+<form action="{{url_for ( 'search_doctor' )}}" method="POST">
+<fieldset>
+<legend>Search Doctor by:</legend>
+<input type="radio" name="search_by" value="doctor_name" id="doctor_name">
+<label for="doctor_name">Name</label>
+<br>
+<input type="radio" name="search_by" value="specialization" id="specialization">
+<label for="specialization">Specialization</label>
+<input type="text" name="search_value" id="search_value">
+</fieldset>
+<button type="submit">Search</button>
+</form>
+{% if searched_doctor %}
+<p>Showing results for {{searched_doctor}}:</p>
+{% endif %}
+<h3>All Registered Doctors</h3>
+{% if all_doctors %}
+<table>
+<tr>
+<th>ID</th>
+<th>Full Name</th>
+<th>Email ID</th>
+<th>Contact Number</th>
+<th>Specialization</th>
+<th>Qualification</th>
+<th>Experience ( in years )</th>
+<th>Controls</th>
+</tr>
+{% for doctor in all_doctors %}
+<tr>
+<td>{{doctor.id}}</td>
+<td>{{doctor.name}}</td>
+<td>{{doctor.email}}</td>
+<td>{{doctor.phone}}</td>
+<td>{{doctor.specialization}}</td>
+<td>{{doctor.qualification}}</td>
+<td>{{doctor.experience_years}}</td>
+<td>
+	<form action="{{url_for ( 'update_doctor', doctor_id = doctor.id )}}" method="GET">
+	<button type="submit">Update</button>
+	</form>
+	<form action="{{url_for ( 'delete_doctor', doctor_id = doctor.id )}}" method="POST">
+	<button type="submit">Blacklist</button>
+	</form>
+</td>
+</tr>
+{% endfor %}
+</table>
+{% else %}
+<p>No matching doctors found.</p>
+{% endif %}
+<br>
+<a href="{{url_for ( 'doctor_registeration' )}}">Add a Doctor</a>
+<br>
+<h2>Patient Details</h2>
+<form action="{{url_for ( 'search_patient' )}}" method="POST">
+<fieldset>
+<legend>Search Patient by:</legend>
+<input type="radio" name="search_by" value="id" id="id">
+<label for="id">Patien ID</label>
+<br>
+<input type="radio" name="search_by" value="patient_name" id="patient_name">
+<label for="patient_name">Name</label>
+<br>
+<input type="radio" name="search_by" value="contact" id="contact">
+<label for="contact">Contact Number</label>
+<input type="text" name="search_value" id="search_value">
+</fieldset>
+<button type="submit">Search</button>
+</form>
+{% if searched_patient %}
+<p>Showing results for {{searched_patient}}</p>
+{% endif %}
+<h3>All registered Patients</h3>
+{% if all_patients %}
+<table>
+<tr>
+<th>ID</th>
+<th>Name</th>
+<th>Phone number</th>
+<th>Email ID</th>
+<th>Gender</th>
+<th>Age</th>
+<th>Blood Group</th>
+<th>Addres</th>
+<th>Medical History</th>
+<th>Controls</th>
+</tr>
+{% for patient in all_patients %}
+<tr>
+<td>{{patient.id}}</td>
+<td>{{patient.name}}</td>
+<td>{{patient.phone}}</td>
+<td>{{patient.email}}</td>
+<td>{{patient.gender}}</td>
+<td>{{patient.age}}</td>
+<td>{{patient.blood_group}}</td>
+<td>{{patient.address}}</td>
+<td>{{patient.medical_history}}</td>
+<td>
+<form action="{{url_for ( 'delete_patient', patient_id = patient.id )}}" method="POST">
+<button type="submit">Blacklist</button>
+</form>
+</td>
+</tr>
+{% endfor %}
+</table>
+{% else %}
+<p>No matches found.</p>
+{% endif %}
+<br>
+<h2>Appointment Details</h2>
+<table>
+<tr>
+<th>ID</th>
+<th>Doctor Name</th>
+<th>Patient Name</th>
+<th>Date</th>
+<th>Time</th>
+<th>Status</th>
+<th>Diagnosis</th>
+<th>Prescription</th>
+<th>Notes</th>
+</tr>
+{% for appointment in all_appointments %}
+<tr>
+<td>{{appointment.id}}</td>
+<td>{{appointment.doctor.name}}</td>
+<td>{{appointment.patient.name}}</td>
+<td>{{appointment.date}}</td>
+<td>{{appointment.time}}</td>
+<td>{{appointment.status}}</td>
+<td>{{appointment.treatment.diagnosis}}</td>
+<td>{{appointment.treatment.prescription}}</td>
+<td>{{appointment.treatment.notes}}</td>
+</tr>
+{% endfor %}
+</table>
 <br>
 {% endblock %}

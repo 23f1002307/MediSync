@@ -47,8 +47,7 @@ def patient_registeration ( ): # Patient Registeration form
 	return render_template ( "patient_registeration.html" )
 
 @app.route ( "/doctor_registeration", methods = [ "GET", "POST" ] )
-def doctor_registeration ( ): # Doctor Registeration form
-	message = ""
+def doctor_registeration ( ): # Doctor Registeration form. Successful registeration of a new doctor redirects to the admin dashboard and for an existing login ID, the user is redirected to the login form.
 	if request.method == "POST":
 		name = request.form.get ( "name" )
 		phone = request.form.get ( "phone" )
@@ -62,7 +61,7 @@ def doctor_registeration ( ): # Doctor Registeration form
 			new_doctor = Doctor ( name = name, phone = phone, email = email_id, password = password, specialization = specialization, qualification = qualification, experience_years = experience_years )
 			db.session.add ( new_doctor )
 			db.session.commit ( )
-			return redirect ( url_for ( 'login', message = "Registeration successful. Please login with your new Email ID and password." ))
+			return redirect ( url_for ( 'admin_dashboard' ))
 		else:
 			return redirect ( url_for ( 'login', message = "This email ID is already registered. Provide a new one or login into the existing one." ))
 	return render_template ( "doctor_registeration.html" )
@@ -111,7 +110,84 @@ def doctor_dashboard ( doctor_id ): # For doctors, this will redirect to their d
 
 @app.route ( "/admin/dashboard", methods = [ "GET", "POST" ] )
 def admin_dashboard ( ): # Login page will redirect here if the correct admin credentials are entered
-	return render_template ( "admin_dashboard.html" )
+	# All Doctors, patients, and appointments need to be displayed on the admin dashboard:
+	all_doctors = Doctor.query.all ( ) # It will return a list of Doctor objects	
+	all_patients = Patient.query.all ( )
+	all_appointments = Appointment.query.all ( )
+	return render_template ( "admin_dashboard.html", all_doctors = all_doctors, all_patients = all_patients, all_appointments = all_appointments, searched_doctor = None, searched_patient = None )
+
+# The following 3 methods are to deal with doctor related tasks on the admin dashboard: update_doctor, delete_doctor, search_doctor
+@app.route ( "/update/doctor/<int:doctor_id>", methods = [ "GET", "POST" ] )
+def update_doctor ( doctor_id ):
+	doctor = Doctor.query.get ( doctor_id )
+	if request.method == "POST":
+		doctor.name = request.form.get ( "name" )
+		doctor.phone = request.form.get ( "phone" )
+		doctor.email = request.form.get ( "email" )
+		doctor.password = request.form.get ( "password" )
+		doctor.specialization = request.form.get ( "specialization" )
+		doctor.qualification = request.form.get ( "qualification" )
+		doctor.experience_years = request.form.get ( "experience_years" )
+		db.session.commit ( )
+		return redirect ( url_for ( 'admin_dashboard' ))
+	return render_template ( 'update_doctor.html', doctor = doctor )
+
+@app.route ( "/delete/doctor/<int:doctor_id>", methods = [ "GET", "POST" ] )
+def delete_doctor ( doctor_id ):
+	doctor = Doctor.query.get ( doctor_id )
+	db.session.delete ( doctor )
+	db.session.commit ( )
+	return redirect ( url_for ( 'admin_dashboard' ))
+
+@app.route ( "/search/doctor", methods = [ "GET", "POST" ] )
+def search_doctor ( ):
+	search_by = request.form.get ( "search_by" )
+	search_value = request.form.get ( "search_value" )
+	# If search is None then return all entries:
+	if search_value == None or search_by == None:
+		return redirect ( url_for ( "admin_dashboard" ))
+	# If search is performed:
+	if search_by == "doctor_name":
+		filtered_doctors = Doctor.query.filter ( Doctor.name.ilike (f"%{search_value}%" )).all ( )
+	elif search_by == "specialization":
+		filtered_doctors = Doctor.query.filter ( Doctor.specialization.ilike ( f"%{search_value}%" )).all ( )
+	else:
+		filtered_doctors = [ ]
+	all_patients = Patient.query.all ( )
+	all_appointments = Appointment.query.all ( )
+	return render_template ( "admin_dashboard.html", all_doctors = filtered_doctors, all_patients = all_patients, all_appointments = all_appointments, searched_doctor = search_value, searched_patient = None )
+
+# The following 2 methods are to deal with patient related tasks on the admin dashboard: search patient and delete_patient
+@app.route ( "/delete/patient/<int:patient_id>", methods = [ "GET", "POST" ] )
+def delete_patient ( patient_id ):
+	patient = Patient.query.get ( patient_id )
+	db.session.delete ( patient )
+	db.session.commit ( )
+	return redirect ( url_for ( 'admin_dashboard' ))
+
+@app.route ( "/search/patient", methods = [ "GET", "POST" ] )
+def search_patient ( ):
+	search_by = request.form.get ( "search_by" )
+	search_value = request.form.get ( "search_value" )
+	if search_value == None or search_by == None:
+		return redirect ( url_for ( 'admin_dashboard' ))
+	if search_by == "patient_name":
+		filtered_patients = Patient.query.filter ( Patient.name.ilike ( f"%{search_value}%" ) ).all ( )
+	elif search_by == "contact":
+		filtered_patients = Patient.query.filter ( Patient.phone.ilike ( f"%{search_value}%" ) ).all ( )
+	elif search_by == "id":
+		filtered_patients = Patient.query.filter ( Patient.id.ilike ( f"%{search_value}%" ) ).all ( )
+	else:
+		filtered_patients = [ ]
+	all_doctors = Doctor.query.all ( )
+	all_appointments = Appointment.query.all ( )
+	return render_template ( "admin_dashboard.html",
+		all_doctors = all_doctors,
+		all_patients = filtered_patients,
+		all_appointments = all_appointments,
+		searched_doctor = None,
+		searched_patient = search_value
+	)
 
 @app.route ( "/error" )
 def error ( ): # To handle any missed conditions
