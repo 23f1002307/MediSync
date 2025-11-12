@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block title %}
+{% if mode == 'add' %}
+Add time slot
+{% else %}
+Update time slot
+{% endif %}
+{% endblock %}
+{% block nav %}
+<li>
+<a href="
+{% if mode == 'add' %}
+{{url_for ( 'doctor_dashboard', doctor_id = doctor.id )}}
+{% else %}
+{{url_for ( 'doctor_dashboard', doctor_id = availability.doctor.id)}}
+{% endif %}">
+Go back to your dashboard</a>
+</li>
+{% endblock %}
+{% block main %}
+<h1>Set your Time Slot</h1>
+<form action="
+{% if mode == 'add' %}
+{{url_for ( 'add_availability', doctor_id = doctor.id )}}
+{% else %}
+{{url_for ( 'update_availability', availability_id = availability.id )}}
+{% endif %}
+" method="POST">
+{% set days = [
+"Mon",
+"Tue",
+"Wed",
+"Thu",
+"Fri",
+"Sat",
+"Sun"
+] %}
+<label for="day">Day: *</label>
+<br>
+<select name="day" id="day">
+<option value="" disabled selected>--Choose one of the days--</option>
+{% for day in days %}
+<option value="{{day}}" {% if mode == 'update' and day == availability.day %}selected{% endif %}>{{day}}</option>
+{% endfor %}
+</select>
+<br>
+<label for="start_time">Enter starting time: *</label>
+<br>
+<input type="time" name="start_time" id="start_time" 
+value="{% if mode == 'update' %}{{ availability.start_time.strftime ( '%H:%M' )}}{% endif %}"
+required>
+<br>
+<label for="end_time">Enter ending Time: *</label>
+<br>
+<input type="time" name="end_time" id="end_time" 
+value="{% if mode == 'update' %}{{ availability.end_time.strftime ( '%H:%M' )}}{% endif %}"
+required>
+<br>
+<button type="submit">{% if mode == 'add' %}Add slot{% else %}Update slot{% endif %}</button>
+</form>
+{% endblock %}

@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Appointment Details{% endblock %}
+{% block nav %}
+<li><a href="{{url_for ( 'doctor_dashboard', doctor_id = appointment.doctor.id )}}">Go back to the Dashboard</a></li>
+{% endblock %}
+{% block main %}
+<h1>View complete Patient and Treatment Details</h1>
+<ul>
+<li>Patient Name: {{appointment.patient.name}}</li>
+<li>Patient's Medical History: {{appointment.patient.medical_history}}</li>
+<li>Diagnosis: {{appointment.treatment.diagnosis}}</li>
+<li>Prescription: {{appointment.treatment.prescription}}</li>
+<li>Extra notes: {{appointment.treatment.notes}}</li>
+</ul>
+<br>
+<form action="{{url_for ( 'treatment_entry', appointment_id = appointment.id )}}" method="GET">
+<button type="submit">Enter treatment Details</button>
+</form>
+{% endblock %}

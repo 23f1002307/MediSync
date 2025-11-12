@@ -2,6 +2,64 @@
 {% block title %}Doctor Dashboard{% endblock %}
 {% block main %}
 <h1>Hello Dr. {{doctor.name}}, Welcome to your dashboard!</h1>
-<p>See all your appointments for the day with MediSync.</p>
-
+<h2>See all your appointments for the day with MediSync.</h2>
+<table>
+<tr>
+<th>Appointment ID</th>
+<th>Patient Name</th>
+<th>Date</th>
+<th>Time</th>
+<th>Status</th>
+<th>Controls</th>
+</tr>
+{% for appointment in doctor_appointments %}
+<tr>
+<td>{{appointment.id}}</td>
+<td>{{appointment.patient.name}}</td>
+<td>{{appointment.date}}</td>
+<td>{{appointment.time}}</td>
+<td>{{appointment.status}}</td>
+<td>
+<form action="{{url_for ( 'update_status', appointment_id = appointment.id )}}" method="POST">
+<button type="submit" name="status" value="cancelled" id="cancelled">Mark Cancelled</button>
+<button type="submit" name="status" value="completed" id="completed">Mark Completed</button>
+</form>
+<form action="{{url_for ( 'view_appointment_details', appointment_id = appointment.id )}}" method="POST">
+<button type="submit">View more</button>
+</form>
+</td>
+</tr>
+{% endfor %}
+</table>
+<br>
+<h2>Availability Schedule for the upcoming week</h2>
+<table>
+<tr>
+<th>Day</th>
+<th>Start time</th>
+<th>End Time</th>
+<th>Controls</th>
+</tr>
+{% for availability in doctor_availabilities %}
+<tr>
+<td>{{availability.day}}</td>
+<td>{{availability.start_time}}</td>
+<td>{{availability.end_time}}</td>
+<td>
+<form action="{{url_for ( 'update_availability', availability_id = availability.id )}}" method="GET">
+<button type="submit">Update</button>
+</form>
+</td>
+</tr>
+{% endfor %}
+<tr>
+<td colspan="3"></td>
+<td>
+<form action="{{url_for ( 'add_availability', doctor_id = doctor.id )}}" method="GET">
+<button type="submit">Add new time slot</button>
+</form>
+</td>
+</tr>
+</table>
+<br>
 {% endblock %}

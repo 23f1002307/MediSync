@@ -33,13 +33,36 @@ Password to login onto the Patient / Doctor dashboard
 A) For Doctor related tasks:
 
 1. Created a search box to filter doctors by their specialization or name
-2. &nbsp;Displaying all the doctors in a tabular format on the dashboard
+2.  Displaying all the doctors in a tabular format on the dashboard
 3. Added update and blacklist buttons next to each doctor to update their pre existing data or to remove them from the database
 4. Added a "Add a doctor" button to register new doctors
 
 B) For Patient related tasks:
 
+1. Search any patient with their ID, contact number or name
+2. All patients are visible on the dashboard by default
+3. Each patient has a blacklist button as a control for the admin to remove the patient from the dashboard
 
+c) For Appointments:
+
+1. All appointments along with the doctor name and patient name and treatment details is displayed on the admin dashboard
+
+
+
+\# Creating doctor dashboard functionalities:
+
+a) See all appointments
+
+1. See individual appointments with the control to mark any appointment as cancelled or completed
+2. View full patient's medical history
+3. See the treatment for that appointment
+4. Edit treatment details like diagnosis, prescription and additional notes
+
+b) Manage doctor's schedule:
+
+1. Add a new time slot
+2. Modify an existing time slot
+3. View all the time slots in a tabular format
 
 
 

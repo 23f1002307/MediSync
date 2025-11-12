@@ -1,4 +1,5 @@
 import os
+from datetime import datetime
 from flask import Flask, render_template, redirect, request, url_for
 from models import db, Patient, Doctor, Appointment, Treatment, Availability
 from dotenv import load_dotenv
@@ -106,8 +107,68 @@ def patient_dashboard ( patient_id ): # After login, patient is redirected to th
 @app.route ( "/doctor/dashboard/<int:doctor_id>", methods = [ "GET", "POST" ] )
 def doctor_dashboard ( doctor_id ): # For doctors, this will redirect to their dashboard
 	doctor = Doctor.query.get ( doctor_id )
-	return render_template ( "doctor_dashboard.html", doctor = doctor )
+	doctor_appointments = Appointment.query.filter_by ( doctor_id = doctor.id )
+	doctor_availabilities = Availability.query.filter_by ( doctor_id = doctor_id )
+	return render_template ( "doctor_dashboard.html", doctor = doctor, doctor_appointments = doctor_appointments, doctor_availabilities = doctor_availabilities )
 
+@app.route ( "/view_appointment/details/<int:appointment_id>", methods = [ "GET", "POST" ] )
+def view_appointment_details ( appointment_id ): # Displays the appointment table and controls for each appointment
+	appointment = Appointment.query.get ( appointment_id )
+	return render_template ( "view_appointment_details.html", appointment = appointment)
+
+@app.route ( "/update/status/<int:appointment_id>", methods = [ "GET", "POST" ] )
+def update_status ( appointment_id ): # Helps the doctor to mark an appointment as cancelled or completed
+	appointment = Appointment.query.get ( appointment_id )
+	status = request.form.get ( "status" )
+	if status == "cancelled":
+		appointment.status = "cancelled"
+	elif status == "completed":
+		appointment.status = "completed"
+	db.session.commit ( )
+	return redirect ( url_for ( "doctor_dashboard", doctor_id = appointment.doctor_id ))
+
+@app.route ( "/treatment_entry/<int:appointment_id>", methods = [ "GET", "POST" ] )
+def treatment_entry ( appointment_id ): # Redirects the doctor to enter treatment for each appointment
+	appointment = Appointment.query.get ( appointment_id )
+	if request.method == "POST":
+		appointment.treatment.diagnosis = request.form.get ( "diagnosis" )
+		appointment.treatment.prescription = request.form.get ( "prescription" )
+		appointment.treatment.notes = request.form.get ( "notes" )
+		db.session.commit ( )
+		return redirect ( url_for ( 'view_appointment_details', appointment_id = appointment.id ))
+	return render_template ( "treatment.html", appointment = appointment )
+
+@app.route ( "/update/availability/<int:availability_id>", methods = [ "GET", "POST" ] )
+def update_availability ( availability_id ): # Helps doctor to update their time slots
+	availability = Availability.query.get ( availability_id )
+	if request.method == "POST":
+		availability.day = request.form.get ( "day" )
+		start_time_str = request.form.get ( "start_time" )
+		end_time_str = request.form.get ( "end_time" )
+		availability.start_time = datetime.strptime ( start_time_str, "%H:%M" ).time ( )
+		availability.end_time = datetime.strptime ( end_time_str, "%H:%M" ).time ( )
+		db.session.commit ( )
+		return redirect ( url_for ( "doctor_dashboard", doctor_id = availability.doctor.id ))
+	return render_template ( "availability.html", mode = "update", availability = availability )
+
+@app.route ( "/add/availability/<int:doctor_id>", methods = [ "GET", "POST" ] )
+def add_availability ( doctor_id ): # Helps the doctor to add a new time slot with a new or existing day
+	doctor = Doctor.query.get ( doctor_id )
+	if request.method == "POST":
+		day = request.form.get ( "day" )
+		start_time_str = request.form.get ( "start_time" )
+		end_time_str = request.form.get ( "end_time" )
+		# Converting into datetime object:
+		start_time = datetime.strptime ( start_time_str, "%H:%M" ).time ( )
+		end_time = datetime.strptime ( end_time_str, "%H:%M" ).time ( )
+
+		new_availability = Availability ( doctor_id = doctor.id, day = day, start_time = start_time, end_time = end_time )
+		db.session.add ( new_availability )
+		db.session.commit ( )
+		return redirect ( url_for ( "doctor_dashboard", doctor_id = doctor.id ))
+	return render_template ( "availability.html", mode = "add", doctor = doctor )
+
+# Admin related features:
 @app.route ( "/admin/dashboard", methods = [ "GET", "POST" ] )
 def admin_dashboard ( ): # Login page will redirect here if the correct admin credentials are entered
 	# All Doctors, patients, and appointments need to be displayed on the admin dashboard:
