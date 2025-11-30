@@ -64,5 +64,51 @@ b) Manage doctor's schedule:
 2. Modify an existing time slot
 3. View all the time slots in a tabular format
 
+\# Creating patient dashboard:
+
+a) For patient related info:
+
+1. Update their profile
+2. &nbsp;Edit / remove any existing data
+3. Change email id and password
+
+b)For doctor related tasks:
+
+1. Adding a table to view all doctors with their available time slots
+2. &nbsp;Book any doctor from the table
+3. Search any doctor by name or specialization
+
+c) For upcoming appointments:
+
+1. See all upcoming appointments with the doctor name, date, time, and status
+
+d) Past appointments:
+
+1. View all past appointments with treatment details
+
+
+
+
+
+\# Appointment History \& conflict prevention:
+
+1)Store and display complete appointment and treatment history ( in admin, doctor and patient dashboards )
+
+2\) Prevent double booking of doctors at the same time slot.
+
+3\) Maintain status updates (Booked / Completed / Cancelled).
+
+4\) Admin and Doctor can view patient treatment records; Patients can view their own records.
+
+5\) Patient cannot book a time slot when the doctor is not available.
+
+
+
+\# Conclusion:
+
+This app has been made keeping the UI simple and easy to navigate.
+
+It is user friendly and completely accessible for people with vision impairment.
+
 
 
