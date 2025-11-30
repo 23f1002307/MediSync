@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% block title %}Update Profile{% endblock %}
+{% block nav %}
+<li>
+<a href="{{url_for ( 'patient_dashboard', patient_id = patient.id )}}">Go back to your dashboard</a>
+</li>
+{% endblock %}
+{% block main %}
+<form action="{{url_for ( 'update_patient', patient_id = patient.id )}}" method="POST">
+<label for="name">Full Name: *</label>
+<br>
+<input type="text" name="name" id="name" value="{{patient.name}}" required>
+<br>
+<label for="phone">Phone number: *</label>
+<br>
+<input type="text" name="phone" id="phone" value="{{patient.phone}}" required>
+<br>
+<label for="email">Email ID: *</label>
+<br>
+<input type="email" name="email" id="email" value="{{patient.email}}" required>
+<br>
+<label for="password">Create a strong password: *</label>
+<br>
+<input type="password" name="password" id="password" value="{{patient.password}}" required>
+<br>
+<label for="age">Age: *</age>
+<br>
+<input type="tel" name="age" id="age" value="{{patient.age}}" required>
+<br>
+<fieldset>
+<legend>Gender: *</legend>
+<br>
+<input type="radio" name="gender" value="m" id="m"
+    {% if patient and patient.gender == 'm' %}checked{% endif %}>
+<label for="m">Male</label>
+<br>
+<input type="radio" name="gender" value="f" id="f"
+    {% if patient and patient.gender == 'f' %}checked{% endif %}>
+<label for="f">Female</label>
+<br>
+<input type="radio" name="gender" value="o" id="o"
+    {% if patient and patient.gender == 'o' %}checked{% endif %}>
+<label for="o">Other</label>
+<br>
+</fieldset>
+<label for="address">Address: * (Enter your complete address )</label>
+<br>
+<input type="text" name="address" id="address" value="{{patient.address}}" required>
+</br>
+<fieldset>
+<legend>Choose your Blood group: *</legend>
+<br>
+<input type="radio" name="blood_group" value="A+" id="A+"
+    {% if patient and patient.blood_group == 'A+' %}checked{% endif %}>
+<label for="A+">A+</label>
+<br>
+<input type="radio" name="blood_group" value="A-" id="A-"
+    {% if patient and patient.blood_group == 'A-' %}checked{% endif %}>
+<label for="A-">A-</label>
+<br>
+<input type="radio" name="blood_group" value="B+" id="B+"
+    {% if patient and patient.blood_group == 'B+' %}checked{% endif %}>
+<label for="B+">B+</label>
+<br>
+<input type="radio" name="blood_group" value="B-" id="B-"
+    {% if patient and patient.blood_group == 'B-' %}checked{% endif %}>
+<label for="B-">B-</label>
+<br>
+<input type="radio" name="blood_group" value="AB+" id="AB+"
+    {% if patient and patient.blood_group == 'AB+' %}checked{% endif %}>
+<label for="AB+">AB+</label>
+<br>
+<input type="radio" name="blood_group" value="AB-" id="AB-"
+    {% if patient and patient.blood_group == 'AB-' %}checked{% endif %}>
+<label for="AB-">AB-</label>
+<br>
+<input type="radio" name="blood_group" value="O+" id="O+"
+    {% if patient and patient.blood_group == 'O+' %}checked{% endif %}>
+<label for="O+">O+</label>
+<br>
+<input type="radio" name="blood_group" value="O-" id="O-"
+    {% if patient and patient.blood_group == 'O-' %}checked{% endif %}>
+<label for="O-">O-</label>
+</fieldset>
+</br>
+<label for="medical_history">Tell us about your medical history ( any specific or repititive problems ): *</label>
+<br>
+<textarea name="medical_history" id="medical_history">{{patient.medical_history}}</textarea>
+<br>
+<button type="submit">Update</button>
+<button type="reset">Clear form</button>
+<br>
+</form>
+{% endblock %}

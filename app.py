@@ -1,6 +1,7 @@
 import os
 from datetime import datetime
 from flask import Flask, render_template, redirect, request, url_for
+from sqlalchemy import and_, or_
 from models import db, Patient, Doctor, Appointment, Treatment, Availability
 from dotenv import load_dotenv
 
@@ -102,7 +103,93 @@ def login ( ): # Common login form for all the 3 users
 @app.route ( "/patient/dashboard/<int:patient_id>", methods = [ "GET", "POST" ] )
 def patient_dashboard ( patient_id ): # After login, patient is redirected to this route
 	patient = Patient.query.get ( patient_id )
-	return render_template ( "patient_dashboard.html", patient = patient)
+	all_doctors = Doctor.query.all ( )
+
+	# Current date & time:
+	now = datetime.now ( ) # Local date & time
+	current_date = now.date ( ) # Format: YYYY-MM-DD
+	current_time = now.time ( ) # Format: HH:MM:SS
+	# Comparing date & time of appointments with current date & time:
+	upcoming_appointments = ( Appointment.query.filter ( Appointment.patient_id == patient.id ).filter (
+		or_ ( 
+		Appointment.date > current_date,
+		and_ ( Appointment.date == current_date, Appointment.time >= current_time )
+		)
+		).all ( ))
+	past_appointments = ( Appointment.query.filter ( Appointment.patient_id == patient.id ).filter ( 
+		or_ (
+		Appointment.date < current_date,
+		and_ ( Appointment.date == current_date, Appointment.time < current_time )
+		)
+		).all ( ))
+	return render_template ( "patient_dashboard.html", patient = patient, all_doctors = all_doctors, upcoming_appointments = upcoming_appointments, past_appointments = past_appointments, searched_doctor = None )
+
+@app.route ( "/update/patient/<int:patient_id>", methods = [ "GET", "POST" ] )
+def update_patient ( patient_id ): # Method to update patient's profile
+	patient = Patient.query.get ( patient_id )
+	if request.method == "POST":
+		patient.name = request.form.get ( "name" )
+		patient.phone_number = request.form.get ( "phone" )
+		patient.email_id = request.form.get ( "email" )
+		patient.password = request.form.get ( "password" )
+		patient.age = request.form.get ( "age" )
+		patient.gender = request.form.get ( "gender" )
+		patient.address = request.form.get ( "address" )
+		patient.blood_group = request.form.get ( "blood_group" )
+		patient.medical_history = request.form.get ( "medical_history" )
+		db.session.commit ( )
+		return redirect ( url_for ( "patient_dashboard", patient_id = patient.id ))
+	return render_template ( "update_patient.html", patient = patient )
+
+@app.route ( "/find/doctor/<int:patient_id>", methods = [ "GET", "POST" ] )
+def find_doctor ( patient_id ):
+	patient = Patient.query.get ( patient_id )
+	search_by = request.form.get ( "search_by" )
+	search_value = request.form.get ( "search_value" )
+	if search_by == None or search_value == None:
+		return redirect ( url_for ( patient_dashboard, patient_id = patient.id ))
+	# If search is performed:
+	if search_by == "doctor_name":
+		filtered_doctors = Doctor.query.filter ( Doctor.name.ilike ( f"%{search_value}%" )).all ( )
+	elif search_by == "specialization":
+		filtered_doctors = Doctor.query.filter ( Doctor.specialization.ilike ( f"%{search_value}%" )).all ( )
+	else:
+		filtered_doctors = [ ]
+	return render_template ( "patient_dashboard.html", patient = patient, all_doctors = filtered_doctors, searched_doctor = search_value )
+
+@app.route ( "/book/appointment/<int:patient_id>/<int:doctor_id>", methods = [ "GET", "POST" ] )
+def book_appointment ( patient_id, doctor_id ):
+	message = ""
+	patient = Patient.query.get ( patient_id )
+	doctor = Doctor.query.get ( doctor_id )
+	if request.method == "POST":
+		appointment_date_str = request.form.get ( "appointment_date" )
+		appointment_time_str = request.form.get ( "appointment_time" )
+
+		# Converting into datetime object:
+		appointment_date = datetime.strptime ( appointment_date_str, "%Y-%m-%d" ).date ( ) # Correct format: %Y-%m-%d
+		appointment_time = datetime.strptime ( appointment_time_str, "%H:%M" ).time ( ) # Correct fromat: %H:%M
+
+		# Converting date into week day to compare with doctor's available days:
+		week_day = appointment_date.strftime ( "%a" ) # Day format: "Mon", etc
+		availabilities = Availability.query.filter_by ( doctor_id = doctor.id, day = week_day ).all ( ) # Get all availabilities which matches the one patient selected
+		if not availabilities: # If there are no matching days available
+			return render_template ( "book_appointment.html", patient = patient, doctor = doctor, message = f"Doctor is not available for {week_day}." )
+		# If day matches then check if the chosen time falls within the doctor's time slot:
+		appointment_window = any ( availability.start_time <= appointment_time < availability.end_time for availability in availabilities ) # Returns boolean
+		if not appointment_window: # It returns False if the appointment time does not fall between available start time and end time
+			return render_template ( "book_appointment.html", patient = patient, doctor = doctor, message = "Doctor is not available for this time slot" )
+
+		# Check if the doctor's slot is not blocked:
+		occupied = Appointment.query.filter_by ( doctor_id = doctor.id, date = appointment_date, time = appointment_time ).first ( )
+		if occupied:
+			return render_template ( "book_appointment.html", doctor = doctor, patient = patient, message = "Sorry, this slot is already booked." )
+
+		new_appointment = Appointment ( doctor_id = doctor.id, patient_id = patient.id, status = "booked", date = appointment_date, time = appointment_time )
+		db.session.add ( new_appointment )
+		db.session.commit ( )
+		return redirect ( url_for ( "patient_dashboard", patient_id = patient.id ))
+	return render_template ( "book_appointment.html", patient = patient, doctor = doctor, message = message )
 
 @app.route ( "/doctor/dashboard/<int:doctor_id>", methods = [ "GET", "POST" ] )
 def doctor_dashboard ( doctor_id ): # For doctors, this will redirect to their dashboard
@@ -131,9 +218,11 @@ def update_status ( appointment_id ): # Helps the doctor to mark an appointment 
 def treatment_entry ( appointment_id ): # Redirects the doctor to enter treatment for each appointment
 	appointment = Appointment.query.get ( appointment_id )
 	if request.method == "POST":
-		appointment.treatment.diagnosis = request.form.get ( "diagnosis" )
-		appointment.treatment.prescription = request.form.get ( "prescription" )
-		appointment.treatment.notes = request.form.get ( "notes" )
+		diagnosis = request.form.get ( "diagnosis" )
+		prescription = request.form.get ( "prescription" )
+		notes = request.form.get ( "notes" )
+		new_treatment = Treatment ( appointment_id = appointment.id, diagnosis = diagnosis, prescription = prescription, notes = notes )
+		db.session.add ( new_treatment )
 		db.session.commit ( )
 		return redirect ( url_for ( 'view_appointment_details', appointment_id = appointment.id ))
 	return render_template ( "treatment.html", appointment = appointment )
@@ -209,7 +298,7 @@ def search_doctor ( ):
 		return redirect ( url_for ( "admin_dashboard" ))
 	# If search is performed:
 	if search_by == "doctor_name":
-		filtered_doctors = Doctor.query.filter ( Doctor.name.ilike (f"%{search_value}%" )).all ( )
+		filtered_doctors = Doctor.query.filter ( Doctor.name.ilike ( f"%{search_value}%" )).all ( )
 	elif search_by == "specialization":
 		filtered_doctors = Doctor.query.filter ( Doctor.specialization.ilike ( f"%{search_value}%" )).all ( )
 	else:

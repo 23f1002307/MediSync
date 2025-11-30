@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Book Appointment{% endblock %}
+{% block nav %}
+<li><a href="{{url_for ( 'patient_dashboard', patient_id = patient.id )}}">Go back to dashboard</a></li>
+{% endblock %}
+{% block main %}
+<h1>Book appointment with {{doctor.name}}</h1>
+<br>
+<p style="color: red;">{{message}}</p>
+<br>
+<form action="{{url_for ( 'book_appointment', patient_id = patient.id, doctor_id = doctor.id )}}" method="POST">
+<label for="appointment_date">Date: *</label>
+<br>
+<input type="date" name="appointment_date" id="appointment_date" required>
+<br>
+<label for="appointment_time">Time: *</label>
+<br>
+<input type="time" name="appointment_time" id="appointment_time" required>
+<br>
+<button type="submit">Book</button>
+<button type="reset">Cancel</button>
+</form>
+{% endblock %}

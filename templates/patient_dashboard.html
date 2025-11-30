@@ -1,7 +1,123 @@
 {% extends "base.html" %}
 {% block title %}Your Dashboard{% endblock %}
+{% block nav %}
+<li>
+<a href="{{url_for ( 'update_patient', patient_id = patient.id )}}">Update Profile</a>
+</li>
+{% endblock %}
 {% block main %}
 <h1>Hey {{patient.name}}, Welcome to your dashboard!</h1>
-<p>Book your appointment right away and get yourself the most satisfactory experience with MediSync.</p>
-
+<h2>Doctor Details</h2>
+<form action="{{url_for ( 'find_doctor', patient_id = patient.id )}}" method="POST">
+<fieldset>
+<legend>Search Doctor by:</legend>
+<input type="radio" name="search_by" value="doctor_name" id="doctor_name">
+<label for="doctor_name">Name</label>
+<br>
+<input type="radio" name="search_by" value="specialization" id="specialization">
+<label for="specialization">Specialization</label>
+<input type="text" name="search_value" id="search_value">
+</fieldset>
+<button type="submit">Search</button>
+</form>
+{% if searched_doctor %}
+<p>Showing results for {{searched_doctor}}:</p>
+{% endif %}
+<h3>All Registered Doctors</h3>
+{% if all_doctors %}
+<table>
+<tr>
+<th>Doctor Name</th>
+<th>Specialization</th>
+<th>Qualification</th>
+<th>Experience ( in years )</th>
+<th>Day</th>
+<th>Start Time</th>
+<th>End Time</th>
+<th>Actions</th>
+</tr>
+{% for doctor in all_doctors %}
+{% set rows = ( doctor.availabilities | length ) if ( doctor.availabilities | length ) > 0 else 1 %}
+{% if doctor.availabilities and ( doctor.availabilities | length ) > 0 %}
+{% for availability in doctor.availabilities %}
+<tr>
+{% if loop.first %}
+<td rowspan="{{rows}}">{{doctor.name}}</td>
+<td rowspan="{{rows}}">{{doctor.specialization}}</td>
+<td rowspan="{{rows}}">{{doctor.qualification}}</td>
+<td rowspan="{{rows}}">{{doctor.experience_years}}</td>
+{% endif %}
+<td>{{availability.day}}</td>
+<td>{{availability.start_time}}</td>
+<td>{{availability.end_time}}</td>
+{% if loop.first %}
+<td rowspan="{{rows}}">
+<a href="{{url_for ( 'book_appointment', patient_id = patient.id, doctor_id = doctor.id )}}">Book appointment</a>
+</td>
+{% endif %}
+</tr>
+{% endfor %}
+{% else %}
+<tr>
+<td>{{doctor.name}}</td>
+<td>{{doctor.specialization}}</td>
+<td>{{doctor.qualification}}</td>
+<td>{{doctor.experience_years}}</td>
+<td colspan="3">No schedule available</td>
+<td>
+<a href="{{url_for ( 'book_appointment', patient_id = patient.id, doctor_id = doctor.id )}}">Book appointment</a>
+</td>
+</tr>
+{% endif %}
+{% endfor %}
+</table>
+{% else %}
+<p>No matching doctors found.</p>
+{% endif %}
+<br>
+<h2>Upcoming appointments</h2>
+<table>
+<tr>
+<th>Appointment ID</th>
+<th>Doctor Name</th>
+<th>Date</th>
+<th>Time</th>
+<th>Status</th>
+</tr>
+{% for appointment in upcoming_appointments %}
+<tr>
+<td>{{appointment.id}}</td>
+<td>{{appointment.doctor.name}}</td>
+<td>{{appointment.date}}</td>
+<td>{{appointment.time}}</td>
+<td>{{appointment.status}}</td>
+</tr>
+{% endfor %}
+</table>
+<br>
+<h2>Past Appointments</h2>
+<table>
+<tr>
+<th>Appointment ID</th>
+<th>Doctor Name</th>
+<th>Diagnosis</th>
+<th>Prescription</th>
+<th>Notes</th>
+<th>Date</th>
+<th>Time</th>
+<th>Status</th>
+</tr>
+{% for appointment in past_appointments %}
+<tr>
+<td>{{appointment.id}}</td>
+<td>{{appointment.doctor.name}}</td>
+<td>{{appointment.treatment.diagnosis}}</td>
+<td>{{appointment.treatment.prescription}}</td>
+<td>{{appointment.treatment.notes}}</td>
+<td>{{appointment.date}}</td>
+<td>{{appointment.time}}</td>
+<td>{{appointment.status}}</td>
+</tr>
+{% endfor %}
+</table>
 {% endblock %}

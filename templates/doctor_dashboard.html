@@ -24,7 +24,7 @@
 <button type="submit" name="status" value="cancelled" id="cancelled">Mark Cancelled</button>
 <button type="submit" name="status" value="completed" id="completed">Mark Completed</button>
 </form>
-<form action="{{url_for ( 'view_appointment_details', appointment_id = appointment.id )}}" method="POST">
+<form action="{{url_for ( 'view_appointment_details', appointment_id = appointment.id )}}" method="GET">
 <button type="submit">View more</button>
 </form>
 </td>
