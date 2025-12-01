@@ -6,12 +6,17 @@
     <meta name="description" content="A Hospital management web app to book & manage appointments, have a consistent patient history.">
     <meta name="author" content="Joham Chouhan | Developer">
     <title>{% block title %}{% endblock %} - MediSync</title>
+<link rel="stylesheet" href="{{url_for ( 'static', filename='css/style.css' )}}">
 </head>
 <body>
-<header>
-<img src="#" alt="logo" height="200" width="200">
-<p>MediSync</p>
-<p></p>
+<header class="header">
+    <div class="logo-container">
+        <img src="{{url_for('static', filename='images/medisync_logo.png')}}" alt="logo" class="logo">
+        <div class="logo-text">
+            <p class="app-name">MediSync</p>
+            <p class="slogan">Smart care, simple access</p>
+        </div>
+    </div>
 <nav>
 <ul>
 <li><a href="{{url_for ( 'login' )}}">Login / Sign in</a>
@@ -24,8 +29,14 @@
 {% block main %}{% endblock %}
 </main>
 <footer>
+<br>
+<h2>Contact Details</h2>
+<br>
 <p>Phone number: 7029191230</p>
 <p>Email ID: <a href="#">support@medisync.in</a></p>
+<br>
+<p>If you encounter any discrepency then mail us @ <a href="#">helpdesk@medisync.in</a></p>
+<p>Your query will be resolved within 48 working hours.</p>
 <p>Copyright &copy; MediSync 2025, all rights reserved.</p>
 </footer>
 </body>

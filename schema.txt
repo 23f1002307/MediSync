@@ -1,4 +1,5 @@
-Patient:
+# Designing schema and relationships:
+1) Patient:
 ID
 Full name - edit ( text )
 Phone number - edit ( tel )
@@ -9,16 +10,17 @@ Age - edit ( tel )
 Blood group - edit ( radio )
 Address - edit ( text area )
 Medical history - edit ( text area )
+
 Note: A patient can search for any doctor by their specialization or name.
 They can book appointment that is appointment is created by the patient.
 Fields he will enter:
-Doctor specialization / Doctor name
+Doctor specialization / Doctor name - To book an appointment
+For booking:
 Date
 Time
-Book / Update / Cancel
 ( Grant access to appointments model )
 
-Doctor:
+2) Doctor:
 ID
 Full Name - edit ( text )
 Phone number - edit ( tel )
@@ -27,22 +29,28 @@ password - edit ( password )
 Specialization - combo box
 qualification - edit ( text )
 experience in years - edit ( tel )
-Note: A doctor can have a single specialization
-It can view all available appointments booked under his ID ( access to appointments )
 
-# Availability:
-Availability in days - check boxes
-available from - drop down ( number )
-available to - drop down ( number )
+Note: It can view all available appointments booked under his ID ( access to appointments )
+It can manage or add time slots - availability model
 
-Appointments:
+3) Availability:
+Availability in days - combo box
+available from - drop down ( time )
+available to - drop down ( time )
+Note: Single doctor can have multiple availabilities
+
+4) Appointments:
 ID
 Patient ID
 Doctor ID
 date
 time
+status - ( "booked", "cancelled", "completed" )
+Note: Patient can only book appointments
+Doctor can cancel or mark appointment as completed.
+If an appointment is cancelled by the doctor then the patient can book another appointment on viewing the status.
 
-Treatment:
+5) Treatment:
 id
 appointment id
 diagnosis
@@ -51,10 +59,11 @@ notes
 Note: Patient can see only his treatment having his id
 That is under appointments
 A doctor can view all patient's history ( patient's profile ( not personal info ) / treatment ) that have booked an appointment with him.
+One treatment record per appointment
 
-# Relations:
-Doctor -> Appointment -> Patient
-Doctor -> Appointment -> Treatment
+# Summarization for the final schema design:
+Doctor -> Appointment -> Patient: Can view patient's info ( not personal data )
+Doctor -> Appointment -> Treatment: Can view treatment for any patient that had an appointment with the doctor
 Can view patient's profile like age, gender, medical history, blood group, etc.
 
 Patient -> search -> doctor 
@@ -62,7 +71,7 @@ View doctor's profile - specialization, experience ( in years ), qualification
 Patient -> Book appointment
 Enter doctor name or specialization
 
-# Final:
+# Relations:
 Doctor -> Availability ( one to many )
 A doctor can have many availabilities on various days.
 Each availability belongs to a single doctor.

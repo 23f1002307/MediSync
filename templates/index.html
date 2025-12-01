@@ -1,10 +1,60 @@
 {% extends "base.html" %}
 {% block title %}Home{% endblock %}
-{% block main%}
+
+{% block main %}
 <h1>Welcome to MediSync</h1>
-<p>Info about MediSync</p>
-<h2>Want to book an appointment? Visiting us for the first time?</h2>
-<p>Kindly register and start using our services right away!</p>
-<a href="{{url_for ( 'patient_registeration' )}}">Register / Sign up</a>
-<br>
-{%endblock %}
+
+<h2>Your trusted digital healthcare companion</h2>
+<p>
+    <strong>MediSync</strong> is an intuitive and seamless medical appointment management system 
+    designed to connect <strong>patients</strong> and <strong>doctors</strong> effortlessly.  
+    Whether you want to book an appointment, manage your medical history, or update your availability 
+    as a doctor—MediSync brings everything together in one unified platform.
+</p>
+
+<h2>What can you do with MediSync?</h2>
+
+<h3>For Patients</h3>
+<p>
+    ✔ Search for doctors by <strong>name</strong> or <strong>specialization</strong><br>
+    ✔ View doctor profiles, qualifications, experience, and available timings<br>
+    ✔ Book appointments instantly based on real-time availability<br>
+    ✔ View, manage, or cancel upcoming appointments<br>
+    ✔ Access your <strong>treatment history</strong> from past visits<br>
+    ✔ Maintain a personalized medical profile including blood group and medical history
+</p>
+
+<h3>For Doctors</h3>
+<p>
+    ✔ Manage your daily and weekly availability with ease<br>
+    ✔ View all patient appointments in a simple dashboard<br>
+    ✔ Update appointment status (Completed / Cancelled)<br>
+    ✔ Record diagnosis, prescription, and patient notes<br>
+    ✔ Maintain complete patient treatment history through linked appointments
+</p>
+
+<h3>For Admin</h3>
+<p>
+    ✔ Manage all doctors, patients, and appointments in one place<br>
+    ✔ Add, update, or remove doctor profiles<br>
+    ✔ Search and filter records for efficient management<br>
+    ✔ Access a live overview of all system users and their activities
+</p>
+
+<h2>New to MediSync?</h2>
+<p>
+    If you're visiting us for the first time, you can register as a 
+    <strong>patient</strong> and start booking appointments immediately.
+    Creating an account takes less than a minute!
+</p>
+
+<a href="{{ url_for('patient_registeration') }}">👉 Register / Sign up</a>
+<br><br>
+
+<h2>Already have an account?</h2>
+<p>Click below to log in and continue where you left off.</p>
+
+<a href="{{ url_for('login') }}">👉 Login</a>
+<br><br>
+
+{% endblock %}
