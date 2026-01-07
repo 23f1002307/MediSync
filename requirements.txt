@@ -3,4 +3,4 @@ Flask-SQLAlchemy
 sqlalchemy
 python-dotenv
 gunicorn
-azure-cosmos
+psycopg2
