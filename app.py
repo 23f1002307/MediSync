@@ -6,7 +6,14 @@ from models import db, Patient, Doctor, Appointment, Treatment, Availability
 from dotenv import load_dotenv
 
 app = Flask ( __name__ )
-app.config [ "SQLALCHEMY_DATABASE_URI" ] = 'sqlite:///MediSync.db'
+
+# Segregating dev & production databases:
+ENV = os.getenv ( "FLASK_ENV", "development" ) # Default environment is Development
+
+if ENV == "development":
+	app.config [ "SQLALCHEMY_DATABASE_URI" ] = 'sqlite:///MediSync.db'
+else:
+	app.config [ "SQLALCHEMY_DATABASE_URI" ] = os.getenv.DATABASE_URL
 
 # Loading secrets from .env:
 load_dotenv ( )
