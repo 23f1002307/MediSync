@@ -1,7 +1,6 @@
-flask
-flask_sqlalchemy
-sqlite3
-datetime
+Flask
+Flask-SQLAlchemy
 sqlalchemy
-dotenv
-
+python-dotenv
+gunicorn
+azure-cosmos
