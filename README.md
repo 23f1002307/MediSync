@@ -69,13 +69,13 @@ b) Manage doctor's schedule:
 a) For patient related info:
 
 1. Update their profile
-2. &nbsp;Edit / remove any existing data
+2.  Edit / remove any existing data
 3. Change email id and password
 
 b)For doctor related tasks:
 
 1. Adding a table to view all doctors with their available time slots
-2. &nbsp;Book any doctor from the table
+2.  Book any doctor from the table
 3. Search any doctor by name or specialization
 
 c) For upcoming appointments:
@@ -104,11 +104,28 @@ d) Past appointments:
 
 
 
+\# Analytics for Admin View:
+
+Admin can now view different patterns from the data which could help in making business decisions.
+
+1. Admin can view number of doctors per department and hence make decisions on how many more doctors or staffs should be hired.
+2. Number of appointments per departments help the admin understand and explain the decision makers to acknowledge growing departments and where the cash flow must be increased or decreased based on demand and supply.
+
+\# AI Bot for assistance:
+
+An AI assistant is introduced to the home page implementing RAG for quick, authentic, and insightful questions about the Hospital.
+
+It retreives information from a well documented text and give grounded answers from patient's reviews to services the hospital provide, etc.
+
+
+
 \# Conclusion:
 
 This app has been made keeping the UI simple and easy to navigate.
 
+It benifits the admin to make and demonstrate crucial business insights.
+
+It also exploits AI in the form of RAG for customer satisfaction and quick response.
+
 It is user friendly and completely accessible for people with vision impairment.
-
-
 

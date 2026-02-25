@@ -4,3 +4,11 @@ sqlalchemy
 python-dotenv
 gunicorn
 psycopg2
+langchain
+langchain-community
+langchain-openai
+langchain-text-splitters
+sentence-transformers
+faiss-cpu
+tiktoken
+openai

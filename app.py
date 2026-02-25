@@ -1,4 +1,5 @@
 import os
+from rag_engine import ask_question
 from datetime import datetime
 from flask import Flask, render_template, redirect, request, url_for
 from sqlalchemy import and_, or_
@@ -31,7 +32,14 @@ with app.app_context ( ):
 
 @app.route ( "/", methods = [ "GET", "POST" ] )
 def index ( ):
-	return render_template ( "index.html" )
+	answer = None
+
+	if request.method == "POST":
+		user_query = request.form.get("question")
+		if user_query:
+			answer = ask_question(user_query)
+
+	return render_template ( "index.html", answer = answer )
 
 @app.route ( "/register/patient", methods = [ "GET", "POST" ] )
 def patient_registeration ( ): # Patient Registeration form
@@ -111,7 +119,7 @@ def login ( ): # Common login form for all the 3 users
 @app.route ( "/patient/dashboard/<int:patient_id>", methods = [ "GET", "POST" ] )
 def patient_dashboard ( patient_id ): # After login, patient is redirected to this route
 	patient = Patient.query.get ( patient_id )
-	all_doctors = Doctor.query.all ( )
+	all_doctors = Doctor.query.limit ( 20 ).all ( )
 
 	# Current date & time:
 	now = datetime.now ( ) # Local date & time
@@ -137,8 +145,8 @@ def update_patient ( patient_id ): # Method to update patient's profile
 	patient = Patient.query.get ( patient_id )
 	if request.method == "POST":
 		patient.name = request.form.get ( "name" )
-		patient.phone_number = request.form.get ( "phone" )
-		patient.email_id = request.form.get ( "email" )
+		patient.phone = request.form.get ( "phone" )
+		patient.email = request.form.get ( "email" )
 		patient.password = request.form.get ( "password" )
 		patient.age = request.form.get ( "age" )
 		patient.gender = request.form.get ( "gender" )
@@ -179,7 +187,7 @@ def book_appointment ( patient_id, doctor_id ):
 		appointment_time = datetime.strptime ( appointment_time_str, "%H:%M" ).time ( ) # Correct fromat: %H:%M
 
 		# Converting date into week day to compare with doctor's available days:
-		week_day = appointment_date.strftime ( "%a" ) # Day format: "Mon", etc
+		week_day = appointment_date.strftime ( "%A" ) # Day format: "Monday", etc
 		availabilities = Availability.query.filter_by ( doctor_id = doctor.id, day = week_day ).all ( ) # Get all availabilities which matches the one patient selected
 		if not availabilities: # If there are no matching days available
 			return render_template ( "book_appointment.html", patient = patient, doctor = doctor, message = f"Doctor is not available for {week_day}." )
@@ -269,9 +277,9 @@ def add_availability ( doctor_id ): # Helps the doctor to add a new time slot wi
 @app.route ( "/admin/dashboard", methods = [ "GET", "POST" ] )
 def admin_dashboard ( ): # Login page will redirect here if the correct admin credentials are entered
 	# All Doctors, patients, and appointments need to be displayed on the admin dashboard:
-	all_doctors = Doctor.query.all ( ) # It will return a list of Doctor objects	
-	all_patients = Patient.query.all ( )
-	all_appointments = Appointment.query.all ( )
+	all_doctors = Doctor.query.limit ( 20 ).all ( ) # It will return a list of Doctor objects	
+	all_patients = Patient.query.limit ( 20 ).all ( )
+	all_appointments = Appointment.query.limit ( 20 ).all ( )
 	# View Analytics:
 	doctors_per_specialization = ( db.session.query ( 
 		Doctor.specialization,
@@ -336,7 +344,31 @@ def search_doctor ( ):
 		filtered_doctors = [ ]
 	all_patients = Patient.query.all ( )
 	all_appointments = Appointment.query.all ( )
-	return render_template ( "admin_dashboard.html", all_doctors = filtered_doctors, all_patients = all_patients, all_appointments = all_appointments, searched_doctor = search_value, searched_patient = None )
+
+	# View Analytics:
+	doctors_per_specialization = ( db.session.query ( 
+		Doctor.specialization,
+		func.count ( Doctor.id ).label ( "Doctor ID" )
+		).group_by ( Doctor.specialization )
+		.all ( )
+	)
+	appointments_per_specialization =  ( db.session.query ( 
+		Doctor.specialization,
+		func.count ( Appointment.id ).label ( "Number of Appointments" )
+		)
+		.join ( Appointment, Appointment.doctor_id == Doctor.id )
+		.group_by ( Doctor.specialization )
+		.all ( )
+	)
+
+	# Segregating data to pass in the template:
+	labels_doctors = [special for special, count in doctors_per_specialization]
+	counts_doctors = [count for special, count in doctors_per_specialization]
+
+	labels_appointments = [special for special, count in appointments_per_specialization]
+	counts_appointments = [count for special, count in appointments_per_specialization]
+
+	return render_template ( "admin_dashboard.html", all_doctors = filtered_doctors, all_patients = all_patients, all_appointments = all_appointments, searched_doctor = search_value, searched_patient = None, labels_doctors = labels_doctors, counts_doctors = counts_doctors, labels_appointments = labels_appointments, counts_appointments = counts_appointments )
 
 # The following 2 methods are to deal with patient related tasks on the admin dashboard: search patient and delete_patient
 @app.route ( "/delete/patient/<int:patient_id>", methods = [ "GET", "POST" ] )
@@ -362,12 +394,37 @@ def search_patient ( ):
 		filtered_patients = [ ]
 	all_doctors = Doctor.query.all ( )
 	all_appointments = Appointment.query.all ( )
+
+	# View Analytics:
+	doctors_per_specialization = ( db.session.query ( 
+		Doctor.specialization,
+		func.count ( Doctor.id ).label ( "Doctor ID" )
+		).group_by ( Doctor.specialization )
+		.all ( )
+	)
+	appointments_per_specialization =  ( db.session.query ( 
+		Doctor.specialization,
+		func.count ( Appointment.id ).label ( "Number of Appointments" )
+		)
+		.join ( Appointment, Appointment.doctor_id == Doctor.id )
+		.group_by ( Doctor.specialization )
+		.all ( )
+	)
+
+	# Segregating data to pass in the template:
+	labels_doctors = [special for special, count in doctors_per_specialization]
+	counts_doctors = [count for special, count in doctors_per_specialization]
+
+	labels_appointments = [special for special, count in appointments_per_specialization]
+	counts_appointments = [count for special, count in appointments_per_specialization]
+
 	return render_template ( "admin_dashboard.html",
 		all_doctors = all_doctors,
 		all_patients = filtered_patients,
 		all_appointments = all_appointments,
 		searched_doctor = None,
-		searched_patient = search_value
+		searched_patient = search_value,
+		labels_doctors = labels_doctors, counts_doctors = counts_doctors, labels_appointments = labels_appointments, counts_appointments = counts_appointments
 	)
 
 @app.route ( "/error" )

@@ -3,7 +3,19 @@
 
 {% block main %}
 <h1>Welcome to MediSync</h1>
+<h2>Ask About MediSync Hospital</h2>
 
+<form method="POST">
+    <input type="text" name="question" placeholder="Ask a question about MediSync or its services..." required>
+    <button type="submit">Ask</button>
+</form>
+
+{% if answer %}
+    <div style="margin-top:20px; padding:15px; border:1px solid #ccc;">
+        <strong>Answer:</strong>
+        <p>{{ answer }}</p>
+    </div>
+{% endif %}
 <h2>Your trusted digital healthcare companion</h2>
 <p>
     <strong>MediSync</strong> is an intuitive and seamless medical appointment management system 

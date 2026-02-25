@@ -1,7 +1,0 @@
-id,appointment_id,diagnosis,prescription,notes
-1,4,Symptoms of stomach ulcer,4 weeks of continuous intake of the prescribed medicines.,Come back for check up after 2 weeks.
-2,6,mild fever,123,visit after 2 days
-3,7,123,345,5543
-4,8,321,abcde,ad
-5,11,abc,123,def
-6,12,abcdef,abcdef,abcdef
