@@ -1,0 +1,5 @@
+id,name,email,password,phone,specialization,qualification,experience_years
+1,Hasan Chouhan,dr.hasan01@gmail.com,drhasan01,9876534200,Cardiology,"MD, MBBS",20
+2,Rohit Varma,dr.rohit02@gmail.com,drrohit02,9875653201,Internal Medicine,MBBS,5
+3,Priya Sharma,dr.priya03@gmail.com,drpriya03,9876632105,Dermatology,BDMS,2
+4,Arun Khanna,dr.arun04@gmail.com,drarun04,9213455670,Cardiology,MBBS,11

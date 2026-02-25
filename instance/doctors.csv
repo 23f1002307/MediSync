@@ -1,0 +1,41 @@
+id,name,email,password,phone,specialization,qualification,experience_years
+1,Doctor1,dr.doctor1_1_appointed@gmail.com,drdoctor1@1,9410567401,Family Medicine/General Practitioner,"MBBS, MD",21
+2,Doctor2,dr.doctor2_2_appointed@gmail.com,drdoctor2@2,9466662629,Internal Medicine,"MBBS, MD",8
+3,Doctor3,dr.doctor3_3_appointed@gmail.com,drdoctor3@3,9734628329,Cardiology,"MBBS, MD",10
+4,Doctor4,dr.doctor4_4_appointed@gmail.com,drdoctor4@4,9342224953,Dermatology,"MBBS, MD",20
+5,Doctor5,dr.doctor5_5_appointed@gmail.com,drdoctor5@5,9968646855,Pediatrics,"MBBS, MD",17
+6,Doctor6,dr.doctor6_6_appointed@gmail.com,drdoctor6@6,9183554697,Obstetrics & Gynecology (OB/GYN),"MBBS, MD",11
+7,Doctor7,dr.doctor7_7_appointed@gmail.com,drdoctor7@7,9633099425,Orthopedic Surgery,"MBBS, MD",10
+8,Doctor8,dr.doctor8_8_appointed@gmail.com,drdoctor8@8,9063439598,Gastroenterology,"MBBS, MD",21
+9,Doctor9,dr.doctor9_9_appointed@gmail.com,drdoctor9@9,9642841597,Ophthalmology,"MBBS, MD",22
+10,Doctor10,dr.doctor10_10_appointed@gmail.com,drdoctor10@10,9853472115,Psychiatry,"MBBS, MD",14
+11,Doctor11,dr.doctor11_11_appointed@gmail.com,drdoctor11@11,9934107771,Otolaryngology (ENT),"MBBS, MD",12
+12,Doctor12,dr.doctor12_12_appointed@gmail.com,drdoctor12@12,9528005485,Endocrinology,"MBBS, MD",3
+13,Doctor13,dr.doctor13_13_appointed@gmail.com,drdoctor13@13,9630056486,Urology,"MBBS, MD",18
+14,Doctor14,dr.doctor14_14_appointed@gmail.com,drdoctor14@14,9301397662,Oncology,"MBBS, MD",25
+15,Doctor15,dr.doctor15_15_appointed@gmail.com,drdoctor15@15,9717145052,Emergency Medicine,"MBBS, MD",12
+16,Doctor16,dr.doctor16_16_appointed@gmail.com,drdoctor16@16,9683040830,Family Medicine/General Practitioner,"MBBS, MD",12
+17,Doctor17,dr.doctor17_17_appointed@gmail.com,drdoctor17@17,9850262140,Internal Medicine,"MBBS, MD",4
+18,Doctor18,dr.doctor18_18_appointed@gmail.com,drdoctor18@18,9170497332,Cardiology,"MBBS, MD",19
+19,Doctor19,dr.doctor19_19_appointed@gmail.com,drdoctor19@19,9402916533,Dermatology,"MBBS, MD",5
+20,Doctor20,dr.doctor20_20_appointed@gmail.com,drdoctor20@20,9683360791,Pediatrics,"MBBS, MD",24
+21,Doctor21,dr.doctor21_21_appointed@gmail.com,drdoctor21@21,9845784798,Obstetrics & Gynecology (OB/GYN),"MBBS, MD",25
+22,Doctor22,dr.doctor22_22_appointed@gmail.com,drdoctor22@22,9498790492,Orthopedic Surgery,"MBBS, MD",7
+23,Doctor23,dr.doctor23_23_appointed@gmail.com,drdoctor23@23,9636226212,Gastroenterology,"MBBS, MD",7
+24,Doctor24,dr.doctor24_24_appointed@gmail.com,drdoctor24@24,9311583754,Ophthalmology,"MBBS, MD",6
+25,Doctor25,dr.doctor25_25_appointed@gmail.com,drdoctor25@25,9102164738,Psychiatry,"MBBS, MD",20
+26,Doctor26,dr.doctor26_26_appointed@gmail.com,drdoctor26@26,9854577193,Otolaryngology (ENT),"MBBS, MD",21
+27,Doctor27,dr.doctor27_27_appointed@gmail.com,drdoctor27@27,9404789782,Endocrinology,"MBBS, MD",25
+28,Doctor28,dr.doctor28_28_appointed@gmail.com,drdoctor28@28,9423488486,Urology,"MBBS, MD",7
+29,Doctor29,dr.doctor29_29_appointed@gmail.com,drdoctor29@29,9775839065,Oncology,"MBBS, MD",23
+30,Doctor30,dr.doctor30_30_appointed@gmail.com,drdoctor30@30,9056150828,Emergency Medicine,"MBBS, MD",16
+31,Doctor31,dr.doctor31_31_appointed@gmail.com,drdoctor31@31,9959874067,Family Medicine/General Practitioner,"MBBS, MD",12
+32,Doctor32,dr.doctor32_32_appointed@gmail.com,drdoctor32@32,9389753876,Internal Medicine,"MBBS, MD",5
+33,Doctor33,dr.doctor33_33_appointed@gmail.com,drdoctor33@33,9993408876,Cardiology,"MBBS, MD",9
+34,Doctor34,dr.doctor34_34_appointed@gmail.com,drdoctor34@34,9706941637,Dermatology,"MBBS, MD",9
+35,Doctor35,dr.doctor35_35_appointed@gmail.com,drdoctor35@35,9663426252,Pediatrics,"MBBS, MD",12
+36,Doctor36,dr.doctor36_36_appointed@gmail.com,drdoctor36@36,9929732952,Obstetrics & Gynecology (OB/GYN),"MBBS, MD",10
+37,Doctor37,dr.doctor37_37_appointed@gmail.com,drdoctor37@37,9391266022,Orthopedic Surgery,"MBBS, MD",25
+38,Doctor38,dr.doctor38_38_appointed@gmail.com,drdoctor38@38,9735285608,Gastroenterology,"MBBS, MD",10
+39,Doctor39,dr.doctor39_39_appointed@gmail.com,drdoctor39@39,9507670780,Ophthalmology,"MBBS, MD",21
+40,Doctor40,dr.doctor40_40_appointed@gmail.com,drdoctor40@40,9108225764,Psychiatry,"MBBS, MD",6

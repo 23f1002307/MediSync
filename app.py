@@ -2,6 +2,7 @@ import os
 from datetime import datetime
 from flask import Flask, render_template, redirect, request, url_for
 from sqlalchemy import and_, or_
+from sqlalchemy import func
 from models import db, Patient, Doctor, Appointment, Treatment, Availability
 from dotenv import load_dotenv
 
@@ -271,7 +272,30 @@ def admin_dashboard ( ): # Login page will redirect here if the correct admin cr
 	all_doctors = Doctor.query.all ( ) # It will return a list of Doctor objects	
 	all_patients = Patient.query.all ( )
 	all_appointments = Appointment.query.all ( )
-	return render_template ( "admin_dashboard.html", all_doctors = all_doctors, all_patients = all_patients, all_appointments = all_appointments, searched_doctor = None, searched_patient = None )
+	# View Analytics:
+	doctors_per_specialization = ( db.session.query ( 
+		Doctor.specialization,
+		func.count ( Doctor.id ).label ( "Doctor ID" )
+		).group_by ( Doctor.specialization )
+		.all ( )
+	)
+	appointments_per_specialization =  ( db.session.query ( 
+		Doctor.specialization,
+		func.count ( Appointment.id ).label ( "Number of Appointments" )
+		)
+		.join ( Appointment, Appointment.doctor_id == Doctor.id )
+		.group_by ( Doctor.specialization )
+		.all ( )
+	)
+
+	# Segregating data to pass in the template:
+	labels_doctors = [special for special, count in doctors_per_specialization]
+	counts_doctors = [count for special, count in doctors_per_specialization]
+
+	labels_appointments = [special for special, count in appointments_per_specialization]
+	counts_appointments = [count for special, count in appointments_per_specialization]
+
+	return render_template ( "admin_dashboard.html", all_doctors = all_doctors, all_patients = all_patients, all_appointments = all_appointments, searched_doctor = None, searched_patient = None, labels_doctors = labels_doctors, counts_doctors = counts_doctors, labels_appointments = labels_appointments, counts_appointments = counts_appointments,  )
 
 # The following 3 methods are to deal with doctor related tasks on the admin dashboard: update_doctor, delete_doctor, search_doctor
 @app.route ( "/update/doctor/<int:doctor_id>", methods = [ "GET", "POST" ] )
